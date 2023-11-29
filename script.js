@@ -19,35 +19,56 @@ document.body.append(maindiv)
 
 for(i=0;i<a.length;i++){
     console.log(a[i]);
-    const div=document.createElement("div")
-    div.setAttribute("class","row col-lg-4 col-sm-12")
-    div.innerHTML=`
-    <div class="col p-2 bg-warning  ">
+    const main=document.createElement("div")
+    main.innerHTML=`<div class="row">
+    <div class="col">
+     <div class="card">
     <div class="card-header bg-black text-center text-bg-primary ">${a[i].name.common}</div>
-      <img src="${a[i].flags.png}" class="card-img  " alt="...">
+      
       <div class="card-body ">
-        <h5 class="Capital">Capital: ${a[i].capital} </h5>
-        <h5 class="Region">Region : ${a[i].region} </h5>
-        <h5 class="Code">Country Code : ${a[i].cca3} </h5>
+      <img src="${a[i].flags.png}" class="card-img  " alt="Flag Image">
+        <p class="Capital"><b>Capital: ${a[i].capital}</b> </p>
+        <p class="Region"><b>Region : ${a[i].region}</b> </p>
+        <p class="Code"><b>Country Code : ${a[i].cca3} </b></p>
+        <button class="btn btn-primary" onclick="getWeatherData('${a[i].name.common}')">Click for Weather</button>
       </div>
-      <div class="button d-flex justify-content-center">
-      <button type="button" class="btn bg-primary">Click for Weather</button>
+      </div
+      </div>
       </div> 
-      </div>
-     
-    `;
+      </div>`;
   
-    
-    document.body.append(div)  
-    
+      maindiv.append(main)
+
 }
 
 
 
+
+
+
 });
-const button=document.querySelector(".btn")
-button.addEventListener("click",(location)=>{
- return fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid={4941b3d646a8b97dee48870bc7b6f485}`).then((data)=>resolve(data)).catch((error)=>reject(error));
-})
+function getWeatherData(restCountryName) {
+  // Use restCountryName in your fetch request to get weather data.
+  const apiKey = "4941b3d646a8b97dee48870bc7b6f485";
+  const Url = `https://api.openweathermap.org/data/2.5/weather?q=${restCountryName}&appid=${apiKey}`;
 
+  fetch(Url)
+    .then((response) => response.json())
+    .then((weatherData) => {
+      const weatherCountryName = weatherData.name;
 
+      if (weatherCountryName === restCountryName) {
+        
+         alert(`Weather in ${weatherData.name}: ${weatherData.main.temp_min} min:deg&c  && ${weatherData.main.temp_max} max:deg&c`)
+        
+        
+      } else {
+        alert("Country names do not match.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching weather data:", error);
+      alert`Error fetching weather data.`;
+    });
+
+  }
